@@ -1,0 +1,41 @@
+version: "2"
+
+services:
+  micro-frontend-legado:
+    container_name: micro-frontend-legado
+    build: legado
+    volumes:
+      - ./legado:/app
+    networks:
+      - local-network
+    environment:
+      - PORT=3000
+    tty: true
+
+  micro-frontend-novo:
+    container_name: micro-frontend-novo
+    build: novo
+    volumes:
+      - ./novo:/app
+    networks:
+      - local-network
+    environment:
+      - PORT=3000
+    tty: true
+
+  micro-frontend-nginx:
+    container_name: micro-frontend-nginx
+    build: nginx
+    ports:
+      - "8888:80"
+    networks:
+      - local-network
+    links:
+      - micro-frontend-legado
+      - micro-frontend-novo
+    depends_on:
+      - micro-frontend-legado
+      - micro-frontend-novo
+
+networks:
+  local-network:
